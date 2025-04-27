@@ -40,6 +40,24 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/auth', UserRouter);
 app.use('/api/post', PostRouter);
 app.use('/api/chats', ChatRouter);
+// --------------------------deployment------------------------------
+
+
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "/dist")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "dist", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// --------------------------deployment------------------------------
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
